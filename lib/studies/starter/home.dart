@@ -1,203 +1,107 @@
-// Copyright 2019 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
 
-import 'package:flutter_gen/gen_l10n/gallery_localizations.dart';
-import 'package:gallery/layout/adaptive.dart';
+class Category {
+  final String name;
+  final String imageUrl;
 
-const appBarDesktopHeight = 128.0;
+  Category(this.name, this.imageUrl);
+}
+
+void main() => runApp(const CardExampleApp());
+
+class CardExampleApp extends StatelessWidget {
+  const CardExampleApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const HomePage(),
+    );
+  }
+}
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    final isDesktop = isDisplayDesktop(context);
-    final localizations = GalleryLocalizations.of(context)!;
-    final body = SafeArea(
-      child: Padding(
-        padding: isDesktop
-            ? const EdgeInsets.symmetric(horizontal: 72, vertical: 48)
-            : const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SelectableText(
-              localizations.starterAppGenericHeadline,
-              style: textTheme.displaySmall!.copyWith(
-                color: colorScheme.onSecondary,
-              ),
-            ),
-            const SizedBox(height: 10),
-            SelectableText(
-              localizations.starterAppGenericSubtitle,
-              style: textTheme.titleMedium,
-            ),
-            const SizedBox(height: 48),
-            SelectableText(
-              localizations.starterAppGenericBody,
-              style: textTheme.bodyLarge,
-            ),
-          ],
-        ),
-      ),
-    );
-
-    if (isDesktop) {
-      return Row(
-        children: [
-          const ListDrawer(),
-          const VerticalDivider(width: 1),
-          Expanded(
-            child: Scaffold(
-              appBar: const AdaptiveAppBar(
-                isDesktop: true,
-              ),
-              body: body,
-              floatingActionButton: FloatingActionButton.extended(
-                heroTag: 'Extended Add',
-                onPressed: () {},
-                label: Text(
-                  localizations.starterAppGenericButton,
-                  style: TextStyle(color: colorScheme.onSecondary),
-                ),
-                icon: Icon(Icons.add, color: colorScheme.onSecondary),
-                tooltip: localizations.starterAppTooltipAdd,
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Scaffold(
-        appBar: const AdaptiveAppBar(),
-        body: body,
-        drawer: const ListDrawer(),
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'Add',
-          onPressed: () {},
-          tooltip: localizations.starterAppTooltipAdd,
-          child: Icon(
-            Icons.add,
-            color: Theme.of(context).colorScheme.onSecondary,
-          ),
-        ),
-      );
-    }
-  }
-}
-
-class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AdaptiveAppBar({
-    super.key,
-    this.isDesktop = false,
-  });
-
-  final bool isDesktop;
-
-  @override
-  Size get preferredSize => isDesktop
-      ? const Size.fromHeight(appBarDesktopHeight)
-      : const Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-    final localizations = GalleryLocalizations.of(context)!;
-    return AppBar(
-      automaticallyImplyLeading: !isDesktop,
-      title: isDesktop
-          ? null
-          : SelectableText(localizations.starterAppGenericTitle),
-      bottom: isDesktop
-          ? PreferredSize(
-              preferredSize: const Size.fromHeight(26),
-              child: Container(
-                alignment: AlignmentDirectional.centerStart,
-                margin: const EdgeInsetsDirectional.fromSTEB(72, 0, 0, 22),
-                child: SelectableText(
-                  localizations.starterAppGenericTitle,
-                  style: themeData.textTheme.titleLarge!.copyWith(
-                    color: themeData.colorScheme.onPrimary,
-                  ),
-                ),
-              ),
-            )
-          : null,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share),
-          tooltip: localizations.starterAppTooltipShare,
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.favorite),
-          tooltip: localizations.starterAppTooltipFavorite,
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.search),
-          tooltip: localizations.starterAppTooltipSearch,
-          onPressed: () {},
-        ),
-      ],
+    return Scaffold(
+      appBar: AppBar(title: const Text('Talk Ease')),
+      body:  CardExample(),
     );
   }
 }
 
-class ListDrawer extends StatefulWidget {
-  const ListDrawer({super.key});
+class CardExample extends StatelessWidget {
+   CardExample({Key? key}) : super(key: key);
 
-  @override
-  State<ListDrawer> createState() => _ListDrawerState();
-}
-
-class _ListDrawerState extends State<ListDrawer> {
-  static const numItems = 9;
-
-  int selectedItem = 0;
+  // List of categories with names and image URLs
+  final List<Category> categories = [
+    Category('Hungry', 'web/assets/Hungry.png'),
+    Category('Thirsty', 'web/assets/Thirsty.png'),
+    Category('Bathroom', 'web/assets/Bathroom.png'),
+    Category('Play', 'web/assets/I want to play legos.png'),
+    
+    // Add more categories with names and image URLs
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final localizations = GalleryLocalizations.of(context)!;
-    return Drawer(
-      child: SafeArea(
-        child: ListView(
-          children: [
-            ListTile(
-              title: SelectableText(
-                localizations.starterAppTitle,
-                style: textTheme.titleLarge,
-              ),
-              subtitle: SelectableText(
-                localizations.starterAppGenericSubtitle,
-                style: textTheme.bodyMedium,
-              ),
+    return ListView.builder(
+      itemCount: 3, // Number of rows
+      itemBuilder: (context, rowIndex) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: List.generate(
+              3, // Number of cards in each row
+              (cardIndex) {
+                int categoryIndex = rowIndex * 3 + cardIndex;
+
+                // Check if categoryIndex is within the categories list bounds
+                if (categoryIndex < categories.length) {
+                  Category category = categories[categoryIndex];
+
+                  return SizedBox(
+                    width: 150,
+                    height: 150,
+                    child: Card(
+                      semanticContainer: true,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(category.imageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Center(
+                          // You can customize the content inside the card here
+                          // For example, you can add a Text widget to display the category name
+                          child: Text(
+                            category.name,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 5,
+                      margin: EdgeInsets.all(10),
+                    ),
+                  );
+                } else {
+                  return Container(); // Placeholder for empty spaces
+                }
+              },
             ),
-            const Divider(),
-            ...Iterable<int>.generate(numItems).toList().map((i) {
-              return ListTile(
-                enabled: true,
-                selected: i == selectedItem,
-                leading: const Icon(Icons.favorite),
-                title: Text(
-                  localizations.starterAppDrawerItem(i + 1),
-                ),
-                onTap: () {
-                  setState(() {
-                    selectedItem = i;
-                  });
-                },
-              );
-            }),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
